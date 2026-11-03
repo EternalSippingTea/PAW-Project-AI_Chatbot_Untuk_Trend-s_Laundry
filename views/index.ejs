@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trend's Laundry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
+
+    <main class="flex-grow flex flex-col">
+        <header class="bg-[#1a2b4c] text-white px-4 py-5 shadow-md">
+            <div class="mx-auto max-w-3xl flex items-center gap-3">
+                <span class="bg-blue-500 p-2 rounded-lg text-xl" aria-hidden="true">💬</span>
+                <div>
+                    <h1 class="text-xl font-bold">Trend's Laundry</h1>
+                    <p class="text-sm text-blue-200">Asisten virtual • Sawangan, Depok</p>
+                </div>
+            </div>
+        </header>
+
+        <section class="flex-grow px-4 py-8">
+            <div class="mx-auto max-w-3xl bg-white rounded-xl shadow-sm border overflow-hidden">
+                <div class="p-5 border-b">
+                    <h2 class="text-lg font-semibold">Chat dengan kami</h2>
+                    <p class="text-sm text-gray-500">Tanya produk, tarif, jam buka, atau status cucian.</p>
+                </div>
+                <div id="chat-messages" class="bg-gray-50 p-5 min-h-72 max-h-[60vh] overflow-y-auto space-y-3" role="log" aria-live="polite">
+                    <p class="text-sm text-gray-700 bg-white border rounded-lg p-3 max-w-[85%]">Halo! Saya asisten Trend's Laundry. Saya bisa membantu melihat produk dan tarif, mengecek status pesanan, atau menjawab pertanyaan tentang jam buka.</p>
+                </div>
+                <div class="px-5 pt-4 flex flex-wrap gap-2">
+                    <button type="button" class="chat-suggestion border rounded-full px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100" data-message="Lihat produk dan tarif">Lihat produk & tarif</button>
+                    <button type="button" class="chat-suggestion border rounded-full px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100" data-message="Saya ingin cek status pesanan">Cek status pesanan</button>
+                    <button type="button" class="chat-suggestion border rounded-full px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100" data-message="Jam buka">Jam buka</button>
+                </div>
+                <form id="chat-form" class="p-5 flex gap-2">
+                    <label for="chat-message" class="sr-only">Pesan untuk chatbot</label>
+                    <input id="chat-message" name="pesan" type="text" maxlength="500" required autocomplete="off" placeholder="Ketik pesan..." class="min-w-0 flex-1 border p-3 rounded-lg outline-none focus:border-blue-500">
+                    <button id="chat-button" type="submit" class="bg-[#1a2b4c] text-white px-5 rounded-lg font-medium hover:bg-blue-900 transition disabled:opacity-60">Kirim</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Javascript Integrasi Client-Side -->
+    <script>
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-message');
+        const chatButton = document.getElementById('chat-button');
+        const chatMessages = document.getElementById('chat-messages');
+        let menungguKodeInvoice = false;
+
+        function tambahPesan(teks, dariPengguna = false, error = false) {
+            const pesan = document.createElement('p');
+            pesan.className = dariPengguna
+                ? 'text-sm text-white bg-blue-700 rounded-lg p-3 max-w-[85%] ml-auto'
+                : `text-sm rounded-lg p-3 max-w-[85%] ${error ? 'text-red-700 bg-red-50 border border-red-200' : 'text-gray-700 bg-white border'}`;
+            pesan.textContent = teks;
+            chatMessages.appendChild(pesan);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        async function mintaJson(url, options) {
+            const response = await fetch(url, options);
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Permintaan tidak dapat diproses.');
+            return data;
+        }
+
+        async function tampilkanProduk() {
+            const produkList = await mintaJson('/api/produk');
+            if (!Array.isArray(produkList) || produkList.length === 0) {
+                tambahPesan('Saat ini data produk belum tersedia.');
+                return;
+            }
+
+            tambahPesan('Berikut produk dan tarif laundry kami:');
+            produkList.forEach((produk) => {
+                tambahPesan(`${produk.nama} — Rp ${Number(produk.harga).toLocaleString('id-ID')}/${produk.satuan}. ${produk.deskripsi} Estimasi: ${produk.estimasi}.`);
+            });
+        }
+
+        async function tampilkanStatus(kodeInvoice) {
+            const data = await mintaJson(`/api/pesanan/${encodeURIComponent(kodeInvoice)}`);
+            tambahPesan(`Invoice ${data.kodeInvoice}: ${data.status}. Layanan: ${data.layanan}. Estimasi: ${data.estimasi}.`);
+        }
+
+        async function kirimPesan(pesan) {
+            const teks = pesan.trim();
+            if (!teks) return;
+
+            tambahPesan(teks, true);
+            const kodeInvoice = teks.match(/\bTLK[\s-]?\d{4}\b/i);
+            const mintaStatus = /\b(status|pesanan|cucian|invoice)\b/i.test(teks);
+            const mintaProduk = /\b(produk|layanan|tarif|harga|daftar)\b/i.test(teks);
+            chatInput.value = '';
+            chatButton.disabled = true;
+            chatButton.textContent = 'Memproses...';
+
+            try {
+                if (kodeInvoice && (menungguKodeInvoice || mintaStatus || /\bTLK\b/i.test(teks))) {
+                    menungguKodeInvoice = false;
+                    await tampilkanStatus(kodeInvoice[0]);
+                } else if (mintaStatus) {
+                    menungguKodeInvoice = true;
+                    tambahPesan('Silakan kirim kode invoice Anda, contohnya TLK-0231.');
+                } else if (mintaProduk) {
+                    menungguKodeInvoice = false;
+                    await tampilkanProduk();
+                } else {
+                    menungguKodeInvoice = false;
+                    const data = await mintaJson('/api/chatbot', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ pesan: teks })
+                    });
+                    tambahPesan(data.jawaban);
+                }
+            } catch (error) {
+                tambahPesan(error.message || 'Terjadi kesalahan saat menghubungi layanan.', false, true);
+            } finally {
+                chatButton.disabled = false;
+                chatButton.textContent = 'Kirim';
+                chatInput.focus();
+            }
+        }
+
+        chatForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            kirimPesan(chatInput.value);
+        });
+
+        document.querySelectorAll('.chat-suggestion').forEach((tombol) => {
+            tombol.addEventListener('click', () => kirimPesan(tombol.dataset.message));
+        });
+    </script>
+</body>
+</html>
