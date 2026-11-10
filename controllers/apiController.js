@@ -30,6 +30,7 @@ module.exports = {
             const newProduk = await produkModel.create(req.body);
             res.status(201).json({ message: "Produk berhasil ditambahkan", data: newProduk });
         } catch (error) {
+            console.error("Gagal menambah produk:", error);
             res.status(500).json({ error: "Gagal menambah produk" });
         }
     },
