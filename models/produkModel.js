@@ -1,10 +1,32 @@
-const dataProduk = [
-    { id: 1, nama: "Cuci Kering", deskripsi: "Cuci dan keringkan pakaian, dilipat rapi.", harga: 6000, satuan: "kg", estimasi: "2 hari" },
-    { id: 2, nama: "Cuci + Setrika", deskripsi: "Cuci, keringkan, dan setrika pakaian.", harga: 8000, satuan: "kg", estimasi: "2 hari" },
-    { id: 3, nama: "Cuci Express", deskripsi: "Layanan kilat untuk cucian yang dibutuhkan segera.", harga: 12000, satuan: "kg", estimasi: "1 hari" },
-    { id: 4, nama: "Setrika Saja", deskripsi: "Khusus setrika untuk pakaian yang sudah bersih.", harga: 5000, satuan: "kg", estimasi: "1 hari" }
-];
+const { db } = require('../config/appconfig');
 
 module.exports = {
-    getAllProduk: () => dataProduk
+    getAll: async () => {
+        const result = await db.query('SELECT * FROM produk ORDER BY id ASC');
+        return result.rows;
+    },
+    getById: async (id) => {
+        const result = await db.query('SELECT * FROM produk WHERE id = $1', [id]);
+        return result.rows[0];
+    },
+    create: async (data) => {
+        const { nama, deskripsi, harga, satuan, estimasi } = data;
+        const result = await db.query(
+            'INSERT INTO produk (nama, deskripsi, harga, satuan, estimasi) VALUES ($1, $2, $3, $4, $5) RETURNING ',
+            [nama, deskripsi, harga, satuan, estimasi]
+        );
+        return result.rows[0];
+    },
+    update: async (id, data) => {
+        const { nama, deskripsi, harga, satuan, estimasi } = data;
+        const result = await db.query(
+            'UPDATE produk SET nama=$1, deskripsi=$2, harga=$3, satuan=$4, estimasi=$5 WHERE id=$6 RETURNING',
+            [nama, deskripsi, harga, satuan, estimasi, id]
+        );
+        return result.rows[0];
+    },
+    delete: async (id) => {
+        const result = await db.query('DELETE FROM produk WHERE id = $1', [id]);
+        return result.rowCount;
+    }
 };
