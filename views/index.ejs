@@ -157,7 +157,7 @@
         </section>
     </main>
 
-    <!-- Footer Inline (Bebas error missing partials) -->
+    <!-- Footer Inline -->
     <footer class="bg-[#1a2b4c] text-white text-center p-4 text-xs mt-8">
         <p>&copy; 2026 Trend's Laundry. All Rights Reserved.</p>
     </footer>
@@ -237,7 +237,7 @@
                     const res = await fetch('/api/pesanan/' + kodeInvoice[0]);
                     const data = await res.json();
                     if(res.ok) {
-                        appendMessage(Halo ${data.nama_pelanggan}!\nInvoice: ${data.kode_invoice}\nStatus Cucian: [ ${data.status} ]\nLayanan: ${data.layanan});
+                        appendMessage(`Halo ${data.nama_pelanggan}!\nInvoice: ${data.kode_invoice}\nStatus Cucian: [ ${data.status} ]\nLayanan: ${data.layanan}`);
                     } else {
                         appendMessage(data.error);
                     }
@@ -277,7 +277,7 @@
                                 <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded font-medium">${item.estimasi}</span>
                             </div>
                         </div>`;
-                    selectAdmin.innerHTML += <option value="${item.nama}">${item.nama} (Rp${item.harga})</option>;
+                    selectAdmin.innerHTML += `<option value="${item.nama}">${item.nama} (Rp${item.harga})</option>`;
                 });
             } catch (e) {
                 console.error("Gagal memuat produk", e);
