@@ -5,134 +5,481 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trend's Laundry</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
+<body class="bg-gray-100 font-sans min-h-screen flex flex-col justify-between">
 
-    <main class="flex-grow flex flex-col">
-        <header class="bg-[#1a2b4c] text-white px-4 py-5 shadow-md">
-            <div class="mx-auto max-w-3xl flex items-center gap-3">
-                <span class="bg-blue-500 p-2 rounded-lg text-xl" aria-hidden="true">💬</span>
-                <div>
-                    <h1 class="text-xl font-bold">Trend's Laundry</h1>
-                    <p class="text-sm text-blue-200">Asisten virtual • Sawangan, Depok</p>
+    <!-- Navbar -->
+    <nav class="bg-[#1a2b4c] text-white p-4 shadow-md sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                <span class="bg-blue-500 p-1 rounded">💬</span> Trend's Laundry
+            </h1>
+            <div class="flex gap-4">
+                <button onclick="switchTab('customer')" id="tab-customer" class="pb-1 border-b-2 border-white font-medium transition">Halaman Pelanggan</button>
+                <button onclick="switchTab('admin')" id="tab-admin" class="pb-1 border-b-2 border-transparent text-gray-300 hover:text-white font-medium transition">Panel Admin (CRUD)</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-5xl mx-auto mt-8 px-4 w-full flex-grow space-y-8">
+        
+        <!-- ================= TAB PELANGGAN ================= -->
+        <section id="view-customer" class="block space-y-8">
+            <div class="bg-white rounded-xl shadow-sm p-8 border text-center max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold mb-3 text-gray-800">Selamat Datang di Trend's Laundry</h2>
+                <p class="text-gray-500 mb-8">Silakan antarkan pakaian Anda ke toko kami. Cepat, bersih, dan wangi! Ingin tahu tarif atau cek status cucian? Gunakan asisten chatbot di pojok kanan bawah.</p>
+                
+                <h3 class="text-xl font-bold text-left text-gray-800 mb-4 border-b pb-2">Daftar Layanan & Tarif</h3>
+                <div class="grid md:grid-cols-2 gap-4 text-left" id="customer-produk-list">
+                    <p class="text-gray-500">Memuat layanan...</p>
                 </div>
             </div>
-        </header>
+        </section>
 
-        <section class="flex-grow px-4 py-8">
-            <div class="mx-auto max-w-3xl bg-white rounded-xl shadow-sm border overflow-hidden">
-                <div class="p-5 border-b">
-                    <h2 class="text-lg font-semibold">Chat dengan kami</h2>
-                    <p class="text-sm text-gray-500">Tanya produk, tarif, jam buka, atau status cucian.</p>
+        <!-- ================= TAB ADMIN (Pencatatan & CRUD Pegawai) ================= -->
+        <section id="view-admin" class="hidden space-y-8">
+            
+            <!-- 1. Kelola Layanan (Produk) -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Kelola Layanan (Produk)</h2>
+                    <button type="button" onclick="bukaFormTambahProduk()" class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 text-sm font-medium">
+                        <i class="fa-solid fa-plus mr-1"></i> Tambah Layanan
+                    </button>
                 </div>
-                <div id="chat-messages" class="bg-gray-50 p-5 min-h-72 max-h-[60vh] overflow-y-auto space-y-3" role="log" aria-live="polite">
-                    <p class="text-sm text-gray-700 bg-white border rounded-lg p-3 max-w-[85%]">Halo! Saya asisten Trend's Laundry. Saya bisa membantu melihat produk dan tarif, mengecek status pesanan, atau menjawab pertanyaan tentang jam buka.</p>
-                </div>
-                <div class="px-5 pt-4 flex flex-wrap gap-2">
-                    <button type="button" class="chat-suggestion border rounded-full px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100" data-message="Lihat produk dan tarif">Lihat produk & tarif</button>
-                    <button type="button" class="chat-suggestion border rounded-full px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100" data-message="Saya ingin cek status pesanan">Cek status pesanan</button>
-                    <button type="button" class="chat-suggestion border rounded-full px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100" data-message="Jam buka">Jam buka</button>
-                </div>
-                <form id="chat-form" class="p-5 flex gap-2">
-                    <label for="chat-message" class="sr-only">Pesan untuk chatbot</label>
-                    <input id="chat-message" name="pesan" type="text" maxlength="500" required autocomplete="off" placeholder="Ketik pesan..." class="min-w-0 flex-1 border p-3 rounded-lg outline-none focus:border-blue-500">
-                    <button id="chat-button" type="submit" class="bg-[#1a2b4c] text-white px-5 rounded-lg font-medium hover:bg-blue-900 transition disabled:opacity-60">Kirim</button>
+
+                <form id="form-produk" class="hidden bg-gray-50 p-4 border rounded-lg mb-6 grid gap-4 grid-cols-2">
+                    <input type="hidden" id="produk-id">
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="block text-sm font-medium mb-1">Nama Layanan</label>
+                        <input type="text" id="produk-nama" required class="w-full border p-2 rounded bg-white">
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="block text-sm font-medium mb-1">Harga (Rp)</label>
+                        <input type="number" id="produk-harga" required class="w-full border p-2 rounded bg-white">
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="block text-sm font-medium mb-1">Satuan</label>
+                        <input type="text" id="produk-satuan" required class="w-full border p-2 rounded bg-white">
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="block text-sm font-medium mb-1">Estimasi</label>
+                        <input type="text" id="produk-estimasi" required class="w-full border p-2 rounded bg-white">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium mb-1">Deskripsi</label>
+                        <textarea id="produk-deskripsi" class="w-full border p-2 rounded bg-white"></textarea>
+                    </div>
+                    <div class="col-span-2 flex gap-2">
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium">Simpan</button>
+                        <button type="button" onclick="tutupFormProduk()" class="bg-gray-400 text-white px-4 py-2 rounded text-sm font-medium">Batal</button>
+                    </div>
                 </form>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 border-b text-sm text-gray-700">
+                                <th class="p-3">ID</th>
+                                <th class="p-3">Nama Layanan</th>
+                                <th class="p-3">Harga</th>
+                                <th class="p-3">Estimasi</th>
+                                <th class="p-3 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-tabel-body" class="text-sm"></tbody>
+                    </table>
+                </div>
             </div>
+
+            <!-- 2. Kelola Pencatatan Pesanan (Input oleh Pegawai) -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Pencatatan Pesanan Pelanggan (Admin)</h2>
+                    <button type="button" onclick="bukaFormPesananAdmin()" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 text-sm font-medium">
+                        <i class="fa-solid fa-plus mr-1"></i> Input Pesanan Manual
+                    </button>
+                </div>
+
+                <form id="form-pesanan-admin" class="hidden bg-gray-50 p-4 border rounded-lg mb-6 grid gap-4 grid-cols-2">
+                    <input type="hidden" id="adm-edit-invoice">
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="block text-sm font-medium mb-1">Nama Pelanggan</label>
+                        <input type="text" id="adm-nama" required class="w-full border p-2 rounded bg-white" placeholder="Contoh: Farhan">
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="block text-sm font-medium mb-1">Nomor HP</label>
+                        <input type="text" id="adm-hp" required class="w-full border p-2 rounded bg-white" placeholder="08123456789">
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="block text-sm font-medium mb-1">Pilih Layanan</label>
+                        <select id="adm-layanan" required class="w-full border p-2 rounded bg-white"></select>
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <label class="block text-sm font-medium mb-1">Status Pesanan</label>
+                        <select id="adm-status" class="w-full border p-2 rounded bg-white">
+                            <option value="Antrian Masuk">Antrian Masuk</option>
+                            <option value="Sedang Dicuci">Sedang Dicuci</option>
+                            <option value="Sedang Disetrika">Sedang Disetrika</option>
+                            <option value="Siap Diambil">Siap Diambil</option>
+                            <option value="Pesanan Sudah Diambil">Pesanan Sudah Diambil</option>
+                        </select>
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium mb-1">Alamat</label>
+                        <textarea id="adm-alamat" required rows="2" class="w-full border p-2 rounded bg-white" placeholder="Alamat pelanggan..."></textarea>
+                    </div>
+                    <div class="col-span-2 flex gap-2">
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded text-sm font-medium">Simpan Pesanan</button>
+                        <button type="button" onclick="tutupFormPesananAdmin()" class="bg-gray-400 text-white px-4 py-2 rounded text-sm font-medium">Batal</button>
+                    </div>
+                </form>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 border-b text-sm text-gray-700">
+                                <th class="p-3">Invoice</th>
+                                <th class="p-3">Nama</th>
+                                <th class="p-3">Kontak & Alamat</th>
+                                <th class="p-3">Layanan</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-tabel-pesanan" class="text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+
         </section>
     </main>
 
-    <!-- Javascript Integrasi Client-Side -->
-    <script>
-        const chatForm = document.getElementById('chat-form');
-        const chatInput = document.getElementById('chat-message');
-        const chatButton = document.getElementById('chat-button');
-        const chatMessages = document.getElementById('chat-messages');
-        let menungguKodeInvoice = false;
+    <!-- Footer Inline (Bebas error missing partials) -->
+    <footer class="bg-[#1a2b4c] text-white text-center p-4 text-xs mt-8">
+        <p>&copy; 2026 Trend's Laundry. All Rights Reserved.</p>
+    </footer>
 
-        function tambahPesan(teks, dariPengguna = false, error = false) {
-            const pesan = document.createElement('p');
-            pesan.className = dariPengguna
-                ? 'text-sm text-white bg-blue-700 rounded-lg p-3 max-w-[85%] ml-auto'
-                : `text-sm rounded-lg p-3 max-w-[85%] ${error ? 'text-red-700 bg-red-50 border border-red-200' : 'text-gray-700 bg-white border'}`;
-            pesan.textContent = teks;
-            chatMessages.appendChild(pesan);
+    <!-- Floating Chatbot -->
+    <div id="chatbot-container" class="hidden fixed bottom-6 right-6 w-80 bg-white rounded-xl shadow-2xl border overflow-hidden flex flex-col transition-all duration-300" style="height: min(450px, calc(100vh - 3rem)); max-width: calc(100vw - 3rem); z-index: 40;">
+        <div class="bg-[#1a2b4c] text-white p-3 flex justify-between items-center cursor-pointer" onclick="toggleChat()">
+            <span class="font-bold text-sm"><i class="fa-solid fa-robot text-blue-300 mr-2"></i> Asisten Laundry</span>
+            <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div id="chat-messages" class="flex-grow p-4 bg-gray-50 overflow-y-auto space-y-3">
+            <p class="text-sm bg-white border rounded-lg p-3 w-max max-w-[85%] text-gray-700 shadow-sm">
+                Halo! Masukkan kode invoice Anda (contoh: TLK-2766) untuk mengecek status cucian.
+            </p>
+        </div>
+        <form id="chat-form" class="border-t p-3 bg-white flex gap-2">
+            <input type="text" id="chat-message" placeholder="Ketik pesan atau kode invoice..." required class="flex-grow border rounded-lg px-3 py-2 outline-none focus:border-blue-500 text-sm bg-white">
+            <button type="submit" class="bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700"><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+    </div>
+
+    <button type="button" id="chatbot-fab" onclick="toggleChat()" class="fixed bottom-6 right-6 bg-[#1a2b4c] text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-xl hover:bg-blue-900 transition" style="z-index: 40;">
+        <i class="fa-solid fa-message"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        function switchTab(tab) {
+            document.getElementById('view-customer').classList.toggle('hidden', tab !== 'customer');
+            document.getElementById('view-admin').classList.toggle('hidden', tab !== 'admin');
+            
+            document.getElementById('tab-customer').className = tab === 'customer' ? 'pb-1 border-b-2 border-white font-medium transition' : 'pb-1 border-b-2 border-transparent text-gray-300 hover:text-white font-medium transition';
+            document.getElementById('tab-admin').className = tab === 'admin' ? 'pb-1 border-b-2 border-white font-medium transition' : 'pb-1 border-b-2 border-transparent text-gray-300 hover:text-white font-medium transition';
+            
+            if(tab === 'admin') {
+                document.getElementById('chatbot-container').classList.add('hidden');
+                document.getElementById('chatbot-fab').classList.add('hidden');
+                chatTerbuka = false;
+                loadDataAdmin();
+                loadDataPesananAdmin();
+            } else {
+                document.getElementById('chatbot-container').classList.add('hidden');
+                document.getElementById('chatbot-fab').classList.remove('hidden');
+                chatTerbuka = false;
+            }
+        }
+
+        let chatTerbuka = false;
+        function toggleChat() {
+            chatTerbuka = !chatTerbuka;
+            document.getElementById('chatbot-container').classList.toggle('hidden', !chatTerbuka);
+            document.getElementById('chatbot-fab').classList.toggle('hidden', chatTerbuka);
+        }
+
+        const chatMessages = document.getElementById('chat-messages');
+        function appendMessage(text, isUser = false) {
+            const div = document.createElement('p');
+            div.className = isUser 
+                ? 'text-sm bg-blue-600 text-white rounded-lg p-3 w-max max-w-[85%] ml-auto shadow-sm'
+                : 'text-sm bg-white border text-gray-700 rounded-lg p-3 w-max max-w-[85%] shadow-sm whitespace-pre-line';
+            div.textContent = text;
+            chatMessages.appendChild(div);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        async function mintaJson(url, options) {
-            const response = await fetch(url, options);
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.error || 'Permintaan tidak dapat diproses.');
-            return data;
-        }
+        document.getElementById('chat-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('chat-message');
+            const pesan = input.value;
+            input.value = '';
+            appendMessage(pesan, true);
 
-        async function tampilkanProduk() {
-            const produkList = await mintaJson('/api/produk');
-            if (!Array.isArray(produkList) || produkList.length === 0) {
-                tambahPesan('Saat ini data produk belum tersedia.');
-                return;
-            }
-
-            tambahPesan('Berikut produk dan tarif laundry kami:');
-            produkList.forEach((produk) => {
-                tambahPesan(`${produk.nama} — Rp ${Number(produk.harga).toLocaleString('id-ID')}/${produk.satuan}. ${produk.deskripsi} Estimasi: ${produk.estimasi}.`);
-            });
-        }
-
-        async function tampilkanStatus(kodeInvoice) {
-            const data = await mintaJson(`/api/pesanan/${encodeURIComponent(kodeInvoice)}`);
-            tambahPesan(`Invoice ${data.kodeInvoice}: ${data.status}. Layanan: ${data.layanan}. Estimasi: ${data.estimasi}.`);
-        }
-
-        async function kirimPesan(pesan) {
-            const teks = pesan.trim();
-            if (!teks) return;
-
-            tambahPesan(teks, true);
-            const kodeInvoice = teks.match(/\bTLK[\s-]?\d{4}\b/i);
-            const mintaStatus = /\b(status|pesanan|cucian|invoice)\b/i.test(teks);
-            const mintaProduk = /\b(produk|layanan|tarif|harga|daftar)\b/i.test(teks);
-            chatInput.value = '';
-            chatButton.disabled = true;
-            chatButton.textContent = 'Memproses...';
-
+            const kodeInvoice = pesan.match(/\bTLK[\s-]?\d{4}\b/i);
+            
             try {
-                if (kodeInvoice && (menungguKodeInvoice || mintaStatus || /\bTLK\b/i.test(teks))) {
-                    menungguKodeInvoice = false;
-                    await tampilkanStatus(kodeInvoice[0]);
-                } else if (mintaStatus) {
-                    menungguKodeInvoice = true;
-                    tambahPesan('Silakan kirim kode invoice Anda, contohnya TLK-0231.');
-                } else if (mintaProduk) {
-                    menungguKodeInvoice = false;
-                    await tampilkanProduk();
+                if (kodeInvoice) {
+                    const res = await fetch('/api/pesanan/' + kodeInvoice[0]);
+                    const data = await res.json();
+                    if(res.ok) {
+                        appendMessage(Halo ${data.nama_pelanggan}!\nInvoice: ${data.kode_invoice}\nStatus Cucian: [ ${data.status} ]\nLayanan: ${data.layanan});
+                    } else {
+                        appendMessage(data.error);
+                    }
                 } else {
-                    menungguKodeInvoice = false;
-                    const data = await mintaJson('/api/chatbot', {
+                    const res = await fetch('/api/chatbot', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ pesan: teks })
+                        body: JSON.stringify({ pesan })
                     });
-                    tambahPesan(data.jawaban);
+                    const data = await res.json();
+                    appendMessage(data.jawaban);
                 }
-            } catch (error) {
-                tambahPesan(error.message || 'Terjadi kesalahan saat menghubungi layanan.', false, true);
-            } finally {
-                chatButton.disabled = false;
-                chatButton.textContent = 'Kirim';
-                chatInput.focus();
+            } catch (err) {
+                appendMessage("Maaf, terjadi kesalahan koneksi.");
+            }
+        });
+
+        async function loadDataCustomer() {
+            try {
+                const res = await fetch('/api/produk');
+                const data = await res.json();
+                
+                const container = document.getElementById('customer-produk-list');
+                const selectAdmin = document.getElementById('adm-layanan');
+                container.innerHTML = '';
+                selectAdmin.innerHTML = '<option value="">-- Pilih Layanan --</option>';
+
+                data.forEach(item => {
+                    container.innerHTML += `
+                        <div class="border rounded-lg p-4 bg-gray-50 flex flex-col justify-between shadow-xs">
+                            <div>
+                                <h3 class="font-bold text-lg text-[#1a2b4c]">${item.nama}</h3>
+                                <p class="text-sm text-gray-600 mb-2">${item.deskripsi}</p>
+                            </div>
+                            <div class="mt-2 pt-2 border-t flex justify-between items-center">
+                                <span class="font-bold text-md text-gray-800">Rp${Number(item.harga).toLocaleString('id-ID')}<span class="text-xs text-gray-500">/${item.satuan}</span></span>
+                                <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded font-medium">${item.estimasi}</span>
+                            </div>
+                        </div>`;
+                    selectAdmin.innerHTML += <option value="${item.nama}">${item.nama} (Rp${item.harga})</option>;
+                });
+            } catch (e) {
+                console.error("Gagal memuat produk", e);
             }
         }
 
-        chatForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-            kirimPesan(chatInput.value);
+        async function loadDataAdmin() {
+            try {
+                const res = await fetch('/api/produk');
+                const data = await res.json();
+                const tbody = document.getElementById('admin-tabel-body');
+                tbody.innerHTML = '';
+                data.forEach(item => {
+                    tbody.innerHTML += `
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="p-3">${item.id}</td>
+                            <td class="p-3 font-medium text-gray-800">${item.nama}</td>
+                            <td class="p-3">Rp${Number(item.harga).toLocaleString('id-ID')} / ${item.satuan}</td>
+                            <td class="p-3">${item.estimasi}</td>
+                            <td class="p-3 text-center space-x-2">
+                                <button type="button" onclick="editProduk('${item.id}')" class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen"></i></button>
+                                <button type="button" onclick="hapusProduk('${item.id}')" class="text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>`;
+                });
+            } catch (e) {
+                console.error("Gagal memuat tabel produk", e);
+            }
+        }
+
+        async function loadDataPesananAdmin() {
+            try {
+                const res = await fetch('/api/pesanan');
+                const data = await res.json();
+                const tbody = document.getElementById('admin-tabel-pesanan');
+                tbody.innerHTML = '';
+                
+                data.forEach(item => {
+                    let statusColor = 'bg-yellow-100 text-yellow-800';
+                    const status = item.status ? item.status.trim() : '';
+
+                    if(status === 'Pesanan Sudah Diambil' || status.toLowerCase() === 'selesai') {
+                        statusColor = 'bg-red-100 text-red-700 font-bold';
+                    } else if(status === 'Siap Diambil') {
+                        statusColor = 'bg-green-100 text-green-800 font-bold';
+                    }
+                    
+                    tbody.innerHTML += `
+                        <tr class="border-b hover:bg-gray-50 align-top">
+                            <td class="p-3 font-bold text-blue-900">${item.kode_invoice}</td>
+                            <td class="p-3 font-medium text-gray-800">${item.nama_pelanggan}</td>
+                            <td class="p-3 text-xs text-gray-600">
+                                <div><i class="fa-solid fa-phone text-gray-400 mr-1"></i> ${item.nomor_hp}</div>
+                                <div class="mt-1"><i class="fa-solid fa-location-dot text-gray-400 mr-1"></i> ${item.alamat}</div>
+                            </td>
+                            <td class="p-3">${item.layanan}</td>
+                            <td class="p-3"><span class="px-2 py-1 rounded text-xs ${statusColor}">${item.status}</span></td>
+                            <td class="p-3 text-center space-x-2">
+                                <button type="button" onclick="editPesanan('${item.kode_invoice}')" class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen"></i></button>
+                                <button type="button" onclick="hapusPesanan('${item.kode_invoice}')" class="text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>`;
+                });
+            } catch (e) {
+                console.error("Gagal memuat tabel pesanan", e);
+            }
+        }
+
+        const formProduk = document.getElementById('form-produk');
+        function bukaFormTambahProduk() {
+            formProduk.reset();
+            document.getElementById('produk-id').value = '';
+            formProduk.classList.remove('hidden');
+        }
+        function tutupFormProduk() { formProduk.classList.add('hidden'); }
+
+        window.editProduk = async function(id) {
+            try {
+                const res = await fetch('/api/produk/' + id);
+                if(!res.ok) throw new Error("Gagal mengambil data produk");
+                const data = await res.json();
+                document.getElementById('produk-id').value = data.id;
+                document.getElementById('produk-nama').value = data.nama;
+                document.getElementById('produk-harga').value = data.harga;
+                document.getElementById('produk-satuan').value = data.satuan;
+                document.getElementById('produk-estimasi').value = data.estimasi;
+                document.getElementById('produk-deskripsi').value = data.deskripsi || '';
+                formProduk.classList.remove('hidden');
+            } catch(e) {
+                alert(e.message);
+            }
+        };
+
+        window.hapusProduk = async function(id) {
+            if(confirm('Yakin ingin menghapus layanan ini?')) {
+                try {
+                    const res = await fetch('/api/produk/' + id, { method: 'DELETE' });
+                    const data = await res.json();
+                    if(!res.ok) throw new Error(data.error || 'Gagal menghapus layanan.');
+                    await Promise.all([loadDataAdmin(), loadDataCustomer()]);
+                } catch(e) {
+                    alert(e.message || 'Kesalahan koneksi saat menghapus layanan.');
+                }
+            }
+        };
+
+        formProduk.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('produk-id').value;
+            const payload = {
+                nama: document.getElementById('produk-nama').value,
+                harga: parseInt(document.getElementById('produk-harga').value),
+                satuan: document.getElementById('produk-satuan').value,
+                estimasi: document.getElementById('produk-estimasi').value,
+                deskripsi: document.getElementById('produk-deskripsi').value
+            };
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? '/api/produk/' + id : '/api/produk';
+
+            try {
+                const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Gagal menyimpan layanan.');
+                tutupFormProduk();
+                await Promise.all([loadDataAdmin(), loadDataCustomer()]);
+            } catch (e) {
+                alert(e.message || 'Kesalahan koneksi saat menyimpan layanan.');
+            }
         });
 
-        document.querySelectorAll('.chat-suggestion').forEach((tombol) => {
-            tombol.addEventListener('click', () => kirimPesan(tombol.dataset.message));
+        const formPesananAdmin = document.getElementById('form-pesanan-admin');
+        function bukaFormPesananAdmin() {
+            formPesananAdmin.reset();
+            document.getElementById('adm-edit-invoice').value = '';
+            formPesananAdmin.classList.remove('hidden');
+        }
+        function tutupFormPesananAdmin() { formPesananAdmin.classList.add('hidden'); }
+
+        window.editPesanan = async function(kode) {
+            try {
+                const res = await fetch('/api/pesanan/' + kode);
+                if(!res.ok) throw new Error("Gagal mengambil data pesanan");
+                const data = await res.json();
+                document.getElementById('adm-edit-invoice').value = data.kode_invoice;
+                document.getElementById('adm-nama').value = data.nama_pelanggan;
+                document.getElementById('adm-hp').value = data.nomor_hp;
+                document.getElementById('adm-layanan').value = data.layanan;
+                document.getElementById('adm-status').value = data.status;
+                document.getElementById('adm-alamat').value = data.alamat || '';
+                formPesananAdmin.classList.remove('hidden');
+            } catch(e) {
+                alert(e.message);
+            }
+        };
+
+        window.hapusPesanan = async function(kode) {
+            if(confirm('Yakin ingin menghapus riwayat pesanan ' + kode + '?')) {
+                try {
+                    const res = await fetch('/api/pesanan/' + kode, { method: 'DELETE' });
+                    const data = await res.json();
+                    if(!res.ok) throw new Error(data.error || 'Gagal menghapus pesanan.');
+                    await loadDataPesananAdmin();
+                } catch(e) {
+                    alert(e.message || 'Kesalahan koneksi saat menghapus pesanan.');
+                }
+            }
+        };
+
+        formPesananAdmin.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const invoice = document.getElementById('adm-edit-invoice').value;
+            const payload = {
+                nama_pelanggan: document.getElementById('adm-nama').value,
+                nomor_hp: document.getElementById('adm-hp').value,
+                layanan: document.getElementById('adm-layanan').value,
+                status: document.getElementById('adm-status').value,
+                alamat: document.getElementById('adm-alamat').value,
+                catatan: "Pencatatan Toko"
+            };
+
+            try {
+                const res = invoice
+                    ? await fetch('/api/pesanan/' + invoice, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    })
+                    : await fetch('/api/pesanan', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Gagal menyimpan pesanan.');
+                tutupFormPesananAdmin();
+                await loadDataPesananAdmin();
+            } catch (e) {
+                alert(e.message || 'Kesalahan koneksi saat menyimpan pesanan.');
+            }
         });
+
+        loadDataCustomer();
     </script>
 </body>
 </html>
