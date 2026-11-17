@@ -1,8 +1,8 @@
 const express = require('express');
 const path = require('path');
-const config = require('./config/appconfig');
-const logger = require('./middlewares/logger');
-const routes = require('./routes/index');
+const config = require('./config/appconfig.js');
+const logger = require('./middlewares/logger.js');
+const routes = require('./routes/index.js');
 
 const app = express();
 
