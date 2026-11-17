@@ -3,19 +3,23 @@
     "dotenv": "^18.0.10",
     "ejs": "^7.0.2",
     "express": "^5.3.0",
-    "nodemon": "^3.1.14",
+    "express-session": "^1.19.0",
     "pg": "^8.23.1",
-    "sequelize": "^6.37.8",
-    "sequelize-cli": "^6.6.5"
+    "sequelize": "^6.37.8"
   },
   "name": "projectcontinue",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "test": "node --test tests/produk.validation.test.js tests/chat.controller.test.js tests/database.models.test.js tests/gemini.service.test.js tests/admin.routes.test.js tests/pesanan.controller.test.js tests/pesanan.validation.test.js tests/member.routes.test.js tests/views.routes.test.js",
+    "test:integration": "node --test tests/integration/postgres.integration.test.js tests/integration/gemini.integration.test.js",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "keywords": [],
-  "type": "commonjs"
+  "type": "commonjs",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
 }
