@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | Trend's Laundry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-slate-50 font-sans min-h-screen flex flex-col antialiased">
+    <%- include('partials/navbar', { activePage }) %>
+
+    <main class="flex-grow">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+            <!-- Login Panel -->
+            <section id="admin-login-panel" class="max-w-md mx-auto">
+                <div class="bg-white rounded-xl border border-slate-200 p-6 md:p-8">
+                    <div class="text-center mb-6">
+                        <div class="w-14 h-14 bg-sky-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-shield-halved text-sky-600 text-xl"></i>
+                        </div>
+                        <h1 class="text-xl font-bold text-slate-900">Login Admin</h1>
+                        <p class="text-sm text-slate-500 mt-1">Masuk untuk mengelola layanan, pesanan, dan member.</p>
+                    </div>
+                    <form id="admin-login-form" class="space-y-4">
+                        <div>
+                            <label for="admin-username" class="block text-sm font-medium text-slate-700 mb-1.5">Username</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                <input id="admin-username" type="text" required maxlength="100" autocomplete="username" class="w-full border border-slate-200 pl-9 pr-3 py-2.5 rounded-lg text-sm bg-white outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors" placeholder="Username admin">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="admin-password" class="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-key absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                <input id="admin-password" type="password" required maxlength="200" autocomplete="current-password" class="w-full border border-slate-200 pl-9 pr-3 py-2.5 rounded-lg text-sm bg-white outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors" placeholder="Masukkan password">
+                            </div>
+                        </div>
+                        <p id="admin-login-feedback" class="text-sm text-red-600" role="alert" aria-live="polite"></p>
+                        <button id="admin-login-submit" type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-sky-600 text-white px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-sky-700 disabled:opacity-40 transition-colors">
+                            <i class="fa-solid fa-right-to-bracket text-xs"></i>
+                            Masuk
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Dashboard -->
+            <section id="admin-dashboard" class="hidden">
+                <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center">
+                            <i class="fa-solid fa-gauge-high text-sky-600"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold text-slate-900">Panel Admin</h1>
+                            <p class="text-sm text-slate-500">Kelola layanan dan pesanan pelanggan.</p>
+                        </div>
+                    </div>
+                    <button type="button" id="admin-logout-button" class="inline-flex items-center gap-2 border border-slate-200 text-slate-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
+                        <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                        Keluar
+                    </button>
+                </div>
+                <p id="admin-dashboard-feedback" class="text-sm text-red-600 mb-4" role="status" aria-live="polite"></p>
+
+                <div class="grid md:grid-cols-[220px_minmax(0,1fr)] gap-6">
+                    <!-- Sidebar -->
+                    <aside class="bg-white rounded-xl border border-slate-200 p-3 h-fit">
+                        <p class="text-[10px] uppercase tracking-wider font-semibold text-slate-400 px-3 py-2">Menu Admin</p>
+                        <nav class="flex md:flex-col gap-1" aria-label="Navigasi panel admin">
+                            <button type="button" id="admin-nav-dashboard" class="admin-nav-button w-full flex items-center gap-2.5 bg-sky-50 text-sky-700 font-medium text-left text-sm px-3 py-2.5 rounded-lg transition-colors" aria-current="page">
+                                <i class="fa-solid fa-gauge-high w-4 text-center text-xs"></i>
+                                Dashboard
+                            </button>
+                            <button type="button" id="admin-nav-members" class="admin-nav-button w-full flex items-center gap-2.5 text-slate-500 hover:bg-slate-50 text-left text-sm px-3 py-2.5 rounded-lg transition-colors">
+                                <i class="fa-solid fa-users w-4 text-center text-xs"></i>
+                                Daftar Member
+                            </button>
+                        </nav>
+                    </aside>
+
+                    <!-- Main Content -->
+                    <div class="min-w-0">
+                        <div id="admin-dashboard-view" class="space-y-6">
+                            <!-- Products Management -->
+                            <section class="bg-white rounded-xl border border-slate-200 p-6">
+                                <div class="flex flex-wrap justify-between items-center gap-3 mb-5">
+                                    <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                                        <i class="fa-solid fa-shirt text-sky-600 text-sm"></i>
+                                        Kelola Layanan
+                                    </h2>
+                                    <button type="button" id="add-product-button" class="inline-flex items-center gap-1.5 bg-sky-600 text-white px-3.5 py-2 rounded-lg hover:bg-sky-700 text-sm font-medium transition-colors">
+                                        <i class="fa-solid fa-plus text-xs"></i>
+                                        Tambah Layanan
+                                    </button>
+                                </div>
+
+                                <form id="form-produk" class="hidden bg-slate-50 p-5 border border-slate-200 rounded-xl mb-5 grid gap-4 grid-cols-2" novalidate>
+                                    <input type="hidden" id="produk-id">
+                                    <div class="col-span-2 md:col-span-1">
+                                        <label for="produk-nama" class="block text-sm font-medium text-slate-700 mb-1.5">Nama Layanan</label>
+                                        <input type="text" id="produk-nama" required minlength="4" maxlength="100" class="w-full border border-slate-200 px-3 py-2.5 rounded-lg text-sm bg-white outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors" placeholder="contoh: Cuci Setrika">
+                                        <p id="produk-nama-error" class="text-xs text-red-600 mt-1 font-medium" role="alert"></p>
+                                    </div>
+                                    <div class="col-span-2 md:col-span-1">
+                                        <label for="produk-harga" class="block text-sm font-medium text-slate-700 mb-1.5">Harga (Rp)</label>
+                                        <input type="text" id="produk-harga" required inputmode="numeric" placeholder="contoh: 10.000" class="w-full border border-slate-200 px-3 py-2.5 rounded-lg text-sm bg-white outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors">
+                                        <p id="produk-harga-error" class="text-xs text-red-600 mt-1 font-medium" role="alert"></p>
+                                    </div>
+                                    <div class="col-span-2 md:col-span-1">
+                                        <label for="produk-satuan" class="block text-sm font-medium text-slate-700 mb-1.5">Satuan</label>
+                                        <input type="text" id="produk-satuan" value="kg" readonly required class="w-full border border-slate-200 px-3 py-2.5 rounded-lg text-sm bg-slate-100 text-slate-600 cursor-not-allowed outline-none select-none">
+                                        <p id="produk-satuan-error" class="text-xs text-red-600 mt-1 font-medium" role="alert"></p>
+                                    </div>
+                                    <div class="col-span-2 md:col-span-1">
+                                        <label for="produk-estimasi" class="block text-sm font-medium text-slate-700 mb-1.5">Estimasi</label>
+                                        <input type="text" id="produk-estimasi" required minlength="3" maxlength="50" class="w-full border border-slate-200 px-3 py-2.5 rounded-lg text-sm bg-white outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors" placeholder="contoh: 2-3 hari">
+                                        <p id="produk-estimasi-error" class="text-xs text-red-600 mt-1 font-medium" role="alert"></p>
+                                    </div>
+                                    <div class="col-span-2">
+                                        <label for="produk-deskripsi" class="block text-sm font-medium text-slate-700 mb-1.5">Deskripsi (opsional)</label>
+                                        <textarea id="produk-deskripsi" maxlength="1000" rows="2" class="w-full border border-slate-200 px-3 py-2.5 rounded-lg text-sm bg-white outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 resize-none transition-colors" placeholder="Keterangan singkat tentang layanan..."></textarea>
+                                        <p id="produk-deskripsi-error" class="text-xs text-red-600 mt-1 font-medium" role="alert"></p>
+                                    </div>
+                                    <div class="col-span-2 flex items-center gap-3">
+                                        <button type="submit" id="save-product-button" class="inline-flex items-center gap-1.5 bg-sky-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-sky-700 disabled:opacity-50 transition-colors">
+                                            <i class="fa-solid fa-check text-xs"></i>
+                                            Simpan
+                                        </button>
+                                        <button type="button" id="cancel-product-button" class="inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
+                                            <i class="fa-solid fa-xmark text-xs"></i>
+                                            Batal
+                                        </button>
+                                        <span id="produk-feedback" class="text-xs" role="status" aria-live="polite"></span>
+                                    </div>
+                                </form>
+
+                                <div class="overflow-x-auto rounded-lg border border-slate-200">
+                                    <table class="w-full text-left">
+                                        <thead>
+                                            <tr class="bg-slate-50 text-xs text-slate-500 uppercase tracking-wider">
+                                                <th class="px-4 py-3 font-semibold">ID</th>
+                                                <th class="px-4 py-3 font-semibold">Nama Layanan</th>
+                                                <th class="px-4 py-3 font-semibold">Harga</th>
+                                                <th class="px-4 py-3 font-semibold">Estimasi</th>
+                                                <th class="px-4 py-3 font-semibold text-center">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="admin-tabel-body" class="text-sm divide-y divide-slate-100"></tbody>
+                                    </table>
+                                </div>
+                            </section>
+
+                            <!-- Orders Management -->
+                            <section class="bg-white rounded-xl border border-slate-200 p-6">
+                                <div class="flex flex-wrap justify-between items-center gap-3 mb-5">
+                                    <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                                        <i class="fa-solid fa-clipboard-list text-sky-600 text-sm"></i>
+                                        Pesanan Pelanggan
+                                    </h2>
+                                    <button type="button" id="add-order-button" class="inline-flex items-center gap-1.5 border border-slate-200 text-slate-700 px-3.5 py-2 rounded-lg hover:bg-slate-50 text-sm font-medium transition-colors">
+                                        <i class="fa-solid fa-plus text-xs"></i>
+                                        Input Manual
+                                    </button>
+                                </div>
+
+                                <form id="form-pesanan-admin" class="hidden bg-slate-50 p-5 border border-slate-200 rounded-xl mb-5 grid gap-4 grid-cols-2" novalidate>
+                                    <div class="col-span-2 md:col-span-1">
+                                        <label for="adm-nama" class="block text-sm font-medium text-slate-700 mb-1.5">Nama Pelanggan</label>
+                                        <input type="text" id="adm-nama" required minlength="2" maxlength="100" class="w-full border border-slate-200 px-3 py-2.5 rounded-lg text-sm bg-white outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors" placeholder="Nama lengkap pelanggan">
+                                        <p id="adm-nama-error" class="text-xs text-red-600 mt-1 font-medium" role="alert"></p>
+                                    </div>
+                                    <div class="col-span-2 md:col-span-1">
+                                        <label for="adm-hp" class="block text-sm font-medium text-slate-700 mb-1.5">Nomor HP</label>
+                                        <input type="tel" id="adm-hp" required maxlength="20" class="w-full border border-slate-200 px-3 py-2.5 rounded-lg text-sm bg-white outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors" placeholder="08123456789">
+                                        <p id="adm-hp-error" class="text-xs text-red-600 mt-1 font-medium" role="alert"></p>
+                                    </div>
+                                    <div class="col-span-2 md:col-span-1">
+                                        <label for="adm-layanan" class="block text-sm font-medium text-slate-700 mb-1.5">Pilih Layanan</label>
+                                        <select id="adm-layanan" required class="w-full border border-slate-200 px-3 py-2.5 rounded-lg text-sm bg-white outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors"></select>
+                                        <p id="adm-layanan-error" class="text-xs text-red-600 mt-1 font-medium" role="alert"></p>
+                                    </div>
+                                    <div class="col-span-2 md:col-span-1">
+                                        <label for="adm-status" class="block text-sm font-medium text-slate-700 mb-1.5">Status Pesanan</label>
+                                        <select id="adm-status" class="w-full border border-slate-200 px-3 py-2.5 rounded-lg text-sm bg-white outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors">
+                                            <option value="Antrian Masuk">Antrian Masuk</option>
+                                            <option value="Sedang Dicuci">Sedang Dicuci</option>
+                                            <option value="Sedang Disetrika">Sedang Disetrika</option>
+                                            <option value="Siap Diambil">Siap Diambil</option>
+                                            <option value="Pesanan Sudah Diambil">Pesanan Sudah Diambil</option>
+                                        </select>
+                                        <p id="adm-status-error" class="text-xs text-red-600 mt-1 font-medium" role="alert"></p>
+                                    </div>
+                                    <div class="col-span-2">
+                                        <label for="adm-alamat" class="block text-sm font-medium text-slate-700 mb-1.5">Alamat</label>
+                                        <textarea id="adm-alamat" required minlength="5" maxlength="500" rows="2" class="w-full border border-slate-200 px-3 py-2.5 rounded-lg text-sm bg-white outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 resize-none transition-colors" placeholder="Alamat lengkap pelanggan"></textarea>
+                                        <p id="adm-alamat-error" class="text-xs text-red-600 mt-1 font-medium" role="alert"></p>
+                                    </div>
+                                    <div class="col-span-2 flex items-center gap-3">
+                                        <button type="submit" id="save-order-button" class="inline-flex items-center gap-1.5 bg-sky-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-sky-700 disabled:opacity-50 transition-colors">
+                                            <i class="fa-solid fa-check text-xs"></i>
+                                            Simpan Pesanan
+                                        </button>
+                                        <button type="button" id="cancel-order-button" class="inline-flex items-center gap-1.5 border border-slate-200 text-slate-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
+                                            <i class="fa-solid fa-xmark text-xs"></i>
+                                            Batal
+                                        </button>
+                                        <span id="adm-order-feedback" class="text-xs" role="status" aria-live="polite"></span>
+                                    </div>
+                                </form>
+
+                                <div class="overflow-x-auto rounded-lg border border-slate-200">
+                                    <table class="w-full text-left">
+                                        <thead>
+                                            <tr class="bg-slate-50 text-xs text-slate-500 uppercase tracking-wider">
+                                                <th class="px-4 py-3 font-semibold">Invoice</th>
+                                                <th class="px-4 py-3 font-semibold">Nama</th>
+                                                <th class="px-4 py-3 font-semibold">Kontak & Alamat</th>
+                                                <th class="px-4 py-3 font-semibold">Layanan</th>
+                                                <th class="px-4 py-3 font-semibold">Berat (kg)</th>
+                                                <th class="px-4 py-3 font-semibold">Status</th>
+                                                <th class="px-4 py-3 font-semibold text-center">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="admin-tabel-pesanan" class="text-sm divide-y divide-slate-100"></tbody>
+                                    </table>
+                                </div>
+                            </section>
+                        </div>
+
+                        <!-- Members View -->
+                        <section id="admin-members-view" class="hidden bg-white rounded-xl border border-slate-200 p-6">
+                            <div class="mb-5">
+                                <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                                    <i class="fa-solid fa-users text-sky-600 text-sm"></i>
+                                    Daftar Member
+                                </h2>
+                                <p class="text-sm text-slate-500 mt-1">Data akun yang terdaftar untuk pemesanan online.</p>
+                            </div>
+                            <div class="overflow-x-auto rounded-lg border border-slate-200">
+                                <table class="w-full text-left">
+                                    <thead>
+                                        <tr class="bg-slate-50 text-xs text-slate-500 uppercase tracking-wider">
+                                            <th class="px-4 py-3 font-semibold">ID</th>
+                                            <th class="px-4 py-3 font-semibold">Nama</th>
+                                            <th class="px-4 py-3 font-semibold">Nomor HP</th>
+                                            <th class="px-4 py-3 font-semibold">Alamat</th>
+                                            <th class="px-4 py-3 font-semibold">Terdaftar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-member-table" class="text-sm divide-y divide-slate-100"></tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>
+    <script src="/js/admin.js" defer></script>
+</body>
+</html>
