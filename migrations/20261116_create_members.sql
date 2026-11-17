@@ -1,0 +1,19 @@
+BEGIN;
+
+CREATE TABLE IF NOT EXISTS member (
+    id SERIAL PRIMARY KEY,
+    nama VARCHAR(100) NOT NULL,
+    nomor_hp VARCHAR(20) NOT NULL UNIQUE,
+    alamat TEXT NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE pesanan
+    ADD COLUMN IF NOT EXISTS member_id INTEGER
+    REFERENCES member(id) ON DELETE SET NULL;
+
+CREATE INDEX IF NOT EXISTS idx_pesanan_member_id
+    ON pesanan(member_id);
+
+COMMIT;
