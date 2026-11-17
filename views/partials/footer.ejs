@@ -1,14 +1,43 @@
-<footer class="bg-white border-t p-4 mt-auto">
-    <div class="container mx-auto flex items-center text-sm text-gray-600 gap-6">
-        <div class="flex items-center gap-2">
-            <span id="server-indicator" class="w-3 h-3 rounded-full bg-gray-300"></span>
-            <span id="server-status-text">Memeriksa server...</span>
+<footer class="bg-white border-t border-slate-200 mt-auto">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        <div class="grid md:grid-cols-3 gap-8">
+            <div>
+                <div class="flex items-center gap-2.5 mb-3">
+                    <div class="w-8 h-8 bg-sky-600 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-shirt text-white text-xs"></i>
+                    </div>
+                    <span class="font-bold text-slate-800">Trend's Laundry</span>
+                </div>
+                <p class="text-sm text-slate-500 leading-relaxed">Layanan laundry terpercaya dengan hasil bersih dan rapi. Kami siap melayani kebutuhan cucian Anda.</p>
+            </div>
+            <div>
+                <h4 class="font-semibold text-slate-800 text-sm mb-3">Bantuan & Pertanyaan</h4>
+                <p class="text-sm text-slate-500 leading-relaxed mb-3">Punya pertanyaan seputar jam buka, tarif, atau ingin cek status cucian? Tanyakan langsung ke Asisten AI kami.</p>
+                <a href="/#chat" onclick="if (document.getElementById('chatbot-fab')) { document.getElementById('chatbot-fab').click(); return false; }" class="inline-flex items-center gap-2 text-xs font-medium text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-100 px-3 py-2 rounded-lg transition-colors">
+                    <i class="fa-solid fa-robot text-sky-600"></i>
+                    <span>Tanya Asisten Laundry</span>
+                </a>
+            </div>
+            <div>
+                <h4 class="font-semibold text-slate-800 text-sm mb-3">Navigasi</h4>
+                <div class="space-y-1.5 text-sm">
+                    <a href="/" class="flex items-center gap-2 text-slate-500 hover:text-sky-600 transition-colors">
+                        <i class="fa-solid fa-house text-slate-400 w-4 text-center text-xs"></i>
+                        <span>Beranda</span>
+                    </a>
+                    <a href="/pemesanan" class="flex items-center gap-2 text-slate-500 hover:text-sky-600 transition-colors">
+                        <i class="fa-solid fa-basket-shopping text-slate-400 w-4 text-center text-xs"></i>
+                        <span>Pemesanan Online</span>
+                    </a>
+                    <a href="/admin" class="flex items-center gap-2 text-slate-500 hover:text-sky-600 transition-colors">
+                        <i class="fa-solid fa-lock text-slate-400 w-4 text-center text-xs"></i>
+                        <span>Panel Admin</span>
+                    </a>
+                </div>
+            </div>
         </div>
-        <div>Environment: <strong id="server-env">-</strong></div>
-        <div>Versi: <strong id="server-version">-</strong></div>
-        <div>Uptime: <strong id="server-uptime">-</strong></div>
+        <div class="border-t border-slate-100 mt-8 pt-6 text-center text-xs text-slate-400">
+            &copy; 2026 Trend's Laundry. Ditenagai oleh Node.js & PostgreSQL.
+        </div>
     </div>
 </footer>
-<div class="bg-[#1a2b4c] text-center p-4 text-sm text-gray-400">
-    AI Chatbot untuk Trend's Laundry • Project Week 7
-</div>
