@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemesanan Online | Trend's Laundry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="bg-slate-50 font-sans min-h-screen flex flex-col antialiased">
+    <%- include('partials/navbar', { activePage }) %>
+
+    <main class="flex-grow">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 py-10 space-y-6">
+            <!-- Page Header -->
+            <section class="bg-white rounded-xl border border-slate-200 p-6 md:p-8">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-sky-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-basket-shopping text-sky-600 text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900">Pemesanan Online</h1>
+                        <p class="text-slate-500 text-sm mt-1">Login atau buat akun member untuk mengirim pesanan laundry.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Auth Panel -->
+            <section id="member-auth-panel" class="bg-white rounded-xl border border-slate-200 p-6 md:p-8">
+                <div class="flex gap-1 bg-slate-100 p-1 rounded-lg mb-6 w-fit">
+                    <button type="button" id="member-login-tab" class="px-4 py-2 rounded-md text-sm font-medium transition-colors bg-white text-slate-900 shadow-sm">
+                        <i class="fa-solid fa-right-to-bracket mr-1.5 text-xs"></i>Login
+                    </button>
+                    <button type="button" id="member-register-tab" class="px-4 py-2 rounded-md text-sm font-medium transition-colors text-slate-500 hover:text-slate-700">
+                        <i class="fa-solid fa-user-plus mr-1.5 text-xs"></i>Buat Akun Baru
+                    </button>
+                </div>
+
+                <form id="member-login-form" class="space-y-4">
+                    <div>
+                        <label for="member-login-phone" class="block text-sm font-medium text-slate-700 mb-1.5">Nomor HP</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-phone absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input id="member-login-phone" name="nomor_hp" type="tel" required maxlength="20" inputmode="tel" autocomplete="tel" class="w-full border border-slate-200 pl-9 pr-3 py-2.5 rounded-lg text-sm outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors" placeholder="08123456789">
+                        </div>
+                        <p id="member-login-phone-error" class="text-sm text-red-600 mt-1" role="alert"></p>
+                    </div>
+                    <div>
+                        <label for="member-login-password" class="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-key absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input id="member-login-password" name="password" type="password" required maxlength="200" autocomplete="current-password" class="w-full border border-slate-200 pl-9 pr-3 py-2.5 rounded-lg text-sm outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors" placeholder="Masukkan password">
+                        </div>
+                        <p id="member-login-password-error" class="text-sm text-red-600 mt-1" role="alert"></p>
+                    </div>
+                    <p id="member-login-feedback" class="text-sm text-red-600" role="alert" aria-live="polite"></p>
+                    <button id="member-login-submit" type="submit" class="inline-flex items-center gap-2 bg-sky-600 text-white px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-sky-700 disabled:opacity-40 transition-colors">
+                        <i class="fa-solid fa-right-to-bracket text-xs"></i>
+                        Login
+                    </button>
+                </form>
+
+                <form id="member-register-form" class="hidden space-y-4" novalidate>
+                    <div>
+                        <label for="member-register-name" class="block text-sm font-medium text-slate-700 mb-1.5">Nama Lengkap</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input id="member-register-name" name="nama" type="text" required minlength="2" maxlength="100" autocomplete="name" class="w-full border border-slate-200 pl-9 pr-3 py-2.5 rounded-lg text-sm outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors" placeholder="Nama lengkap Anda">
+                        </div>
+                        <p id="member-register-name-error" class="text-sm text-red-600 mt-1" role="alert"></p>
+                    </div>
+                    <div>
+                        <label for="member-register-phone" class="block text-sm font-medium text-slate-700 mb-1.5">Nomor HP</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-phone absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input id="member-register-phone" name="nomor_hp" type="tel" required maxlength="20" inputmode="tel" autocomplete="tel" class="w-full border border-slate-200 pl-9 pr-3 py-2.5 rounded-lg text-sm outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors" placeholder="08123456789">
+                        </div>
+                        <p id="member-register-phone-error" class="text-sm text-red-600 mt-1" role="alert"></p>
+                    </div>
+                    <div>
+                        <label for="member-register-address" class="block text-sm font-medium text-slate-700 mb-1.5">Alamat</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-location-dot absolute left-3 top-3 text-slate-400 text-xs"></i>
+                            <textarea id="member-register-address" name="alamat" required minlength="5" maxlength="500" autocomplete="street-address" rows="2" class="w-full border border-slate-200 pl-9 pr-3 py-2.5 rounded-lg text-sm outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors resize-none" placeholder="Alamat lengkap Anda"></textarea>
+                        </div>
+                        <p id="member-register-address-error" class="text-sm text-red-600 mt-1" role="alert"></p>
+                    </div>
+                    <div>
+                        <label for="member-register-password" class="block text-sm font-medium text-slate-700 mb-1.5">Password (minimal 12 karakter)</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-key absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input id="member-register-password" name="password" type="password" required minlength="12" maxlength="200" autocomplete="new-password" class="w-full border border-slate-200 pl-9 pr-3 py-2.5 rounded-lg text-sm outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors" placeholder="Buat password kuat">
+                        </div>
+                        <p id="member-register-password-error" class="text-sm text-red-600 mt-1" role="alert"></p>
+                    </div>
+                    <div>
+                        <label for="member-register-confirm" class="block text-sm font-medium text-slate-700 mb-1.5">Konfirmasi Password</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-key absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <input id="member-register-confirm" name="konfirmasi_password" type="password" required minlength="12" maxlength="200" autocomplete="new-password" class="w-full border border-slate-200 pl-9 pr-3 py-2.5 rounded-lg text-sm outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 transition-colors" placeholder="Ulangi password">
+                        </div>
+                        <p id="member-register-confirm-error" class="text-sm text-red-600 mt-1" role="alert"></p>
+                    </div>
+                    <p id="member-register-feedback" class="text-sm text-red-600" role="alert" aria-live="polite"></p>
+                    <button id="member-register-submit" type="submit" class="inline-flex items-center gap-2 bg-sky-600 text-white px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-sky-700 disabled:opacity-40 transition-colors">
+                        <i class="fa-solid fa-user-plus text-xs"></i>
+                        Buat Akun
+                    </button>
+                </form>
+            </section>
+
+            <!-- Order Panel (visible after login) -->
+            <section id="member-order-panel" class="hidden bg-white rounded-xl border border-slate-200 p-6 md:p-8">
+                <div class="flex flex-wrap justify-between items-start gap-4 mb-6 pb-6 border-b border-slate-100">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-user text-sky-600 text-sm"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-900">Halo, <span id="member-greeting"></span></h2>
+                            <p class="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
+                                <i class="fa-solid fa-phone text-slate-400"></i>
+                                <span id="member-phone-display"></span>
+                            </p>
+                        </div>
+                    </div>
+                    <button type="button" id="member-logout-button" class="inline-flex items-center gap-2 border border-slate-200 text-slate-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
+                        <i class="fa-solid fa-right-from-bracket text-xs"></i>
+                        Logout
+                    </button>
+                </div>
+
+                <h3 class="font-semibold text-slate-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-file-lines text-sky-600 text-sm"></i>
+                    Formulir Pesanan
+                </h3>
+
+                <form id="member-order-form" class="grid gap-4 md:grid-cols-2" novalidate>
+                    <div>
+                        <label for="order-name" class="block text-sm font-medium text-slate-700 mb-1.5">Nama Pelanggan</label>
+                        <input id="order-name" name="nama_pelanggan" type="text" readonly required class="w-full border border-slate-200 px-3 py-2.5 rounded-lg text-sm bg-slate-50 text-slate-500 cursor-not-allowed">
+                        <p id="order-name-error" class="text-sm text-red-600 mt-1" role="alert"></p>
+                    </div>
+                    <div>
+                        <label for="order-phone" class="block text-sm font-medium text-slate-700 mb-1.5">Nomor HP</label>
+                        <input id="order-phone" name="nomor_hp" type="tel" readonly required class="w-full border border-slate-200 px-3 py-2.5 rounded-lg text-sm bg-slate-50 text-slate-500 cursor-not-allowed">
+                        <p id="order-phone-error" class="text-sm text-red-600 mt-1" role="alert"></p>
+                    </div>
+                    <div>
+                        <label for="order-service" class="block text-sm font-medium text-slate-700 mb-1.5">Pilih Layanan</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-shirt absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                            <select id="order-service" name="layanan" required class="w-full border border-slate-200 pl-9 pr-3 py-2.5 rounded-lg text-sm bg-white outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 appearance-none transition-colors">
+                                <option value="">-- Pilih Layanan --</option>
+                            </select>
+                        </div>
+                        <p id="order-service-error" class="text-sm text-red-600 mt-1" role="alert"></p>
+                    </div>
+                    <div>
+                        <label for="order-address" class="block text-sm font-medium text-slate-700 mb-1.5">Alamat Pesanan</label>
+                        <textarea id="order-address" name="alamat" required minlength="5" maxlength="500" rows="2" class="w-full border border-slate-200 px-3 py-2.5 rounded-lg text-sm outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 resize-none transition-colors" placeholder="Alamat pengambilan/pengiriman"></textarea>
+                        <p id="order-address-error" class="text-sm text-red-600 mt-1" role="alert"></p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="order-notes" class="block text-sm font-medium text-slate-700 mb-1.5">Catatan (opsional)</label>
+                        <textarea id="order-notes" name="catatan" maxlength="1000" rows="2" class="w-full border border-slate-200 px-3 py-2.5 rounded-lg text-sm outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-100 resize-none transition-colors" placeholder="Instruksi khusus untuk cucian Anda..."></textarea>
+                        <p id="order-notes-error" class="text-sm text-red-600 mt-1" role="alert"></p>
+                    </div>
+                    <div class="md:col-span-2">
+                        <button id="order-submit" type="submit" class="inline-flex items-center gap-2 bg-sky-600 text-white px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-sky-700 disabled:opacity-40 transition-colors">
+                            <i class="fa-solid fa-paper-plane text-xs"></i>
+                            Kirim Pesanan
+                        </button>
+                        <p id="order-feedback" class="text-sm mt-3" role="status" aria-live="polite"></p>
+                    </div>
+                </form>
+
+                <div id="order-confirmation" class="hidden mt-6 border border-emerald-200 bg-emerald-50 p-5 rounded-xl" role="status" aria-live="polite">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-emerald-800">Pesanan berhasil dicatat</h3>
+                            <p class="text-sm text-emerald-700 mt-1">Simpan kode invoice ini untuk mengecek status cucian melalui chatbot di beranda.</p>
+                            <p id="order-invoice" class="font-bold text-lg text-emerald-900 mt-2 font-mono"></p>
+                            <a href="/" class="inline-flex items-center gap-1.5 mt-3 text-sm text-sky-700 hover:text-sky-800 font-medium">
+                                <i class="fa-solid fa-arrow-left text-xs"></i>
+                                Kembali ke beranda
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>
+    <script src="/js/pemesanan.js" defer></script>
+</body>
+</html>
