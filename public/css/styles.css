@@ -1,0 +1,71 @@
+/* Chatbot positioning */
+.chatbot-window {
+    height: min(480px, calc(100vh - 6rem));
+    max-width: calc(100vw - 2.5rem);
+    z-index: 40;
+}
+
+.chatbot-toggle {
+    z-index: 40;
+}
+
+/* Smooth transitions */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Table row hover */
+tbody tr:hover {
+    background-color: rgb(248, 250, 252);
+}
+
+/* Scrollbar styling for chat */
+#chat-messages::-webkit-scrollbar {
+    width: 4px;
+}
+
+#chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#chat-messages::-webkit-scrollbar-thumb {
+    background-color: rgb(203, 213, 225);
+    border-radius: 9999px;
+}
+
+/* Status badge colors */
+.status-badge-antrian {
+    background-color: rgb(241, 245, 249);
+    color: rgb(71, 85, 105);
+}
+
+.status-badge-cuci {
+    background-color: rgb(219, 234, 254);
+    color: rgb(29, 78, 216);
+}
+
+.status-badge-setrika {
+    background-color: rgb(254, 249, 195);
+    color: rgb(161, 98, 7);
+}
+
+.status-badge-siap {
+    background-color: rgb(220, 252, 231);
+    color: rgb(21, 128, 61);
+}
+
+.status-badge-diambil {
+    background-color: rgb(243, 244, 246);
+    color: rgb(107, 114, 128);
+}
+
+/* Focus visible for better accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid rgb(14, 165, 233);
+    outline-offset: 2px;
+}
