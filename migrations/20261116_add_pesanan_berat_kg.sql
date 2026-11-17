@@ -1,0 +1,6 @@
+BEGIN;
+
+ALTER TABLE pesanan
+    ADD COLUMN IF NOT EXISTS berat_kg NUMERIC(8, 2);
+
+COMMIT;
