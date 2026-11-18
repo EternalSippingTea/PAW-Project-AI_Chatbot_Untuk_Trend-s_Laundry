@@ -45,3 +45,5 @@ router.post('/pesanan', requireMemberAuth, validateCreatePesanan, pesananControl
 router.put('/pesanan/:kodeInvoice', requireAdminAuth, validateUpdatePesanan, pesananController.putPesanan);
 router.delete('/pesanan/:kodeInvoice', requireAdminAuth, pesananController.deletePesanan);
 
+module.exports = router;
+
