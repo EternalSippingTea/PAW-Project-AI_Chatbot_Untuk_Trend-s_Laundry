@@ -20,19 +20,13 @@ Simpan tangkapan layar pada folder `docs/screenshots/`, lalu ganti nama file pad
 
 ![Screenshot halaman beranda](docs/screenshots/home.png)
 
-*Tambahkan tangkapan layar halaman beranda di `docs/screenshots/home.png`.*
-
 ### Halaman Pemesanan
 
 ![Screenshot halaman pemesanan](docs/screenshots/pemesanan.png)
 
-*Tambahkan tangkapan layar halaman pemesanan di `docs/screenshots/pemesanan.png`.*
-
 ### Panel Admin
 
 ![Screenshot panel admin](docs/screenshots/admin.png)
-
-*Tambahkan tangkapan layar panel admin di `docs/screenshots/admin.png`.*
 
 ## Teknologi
 
